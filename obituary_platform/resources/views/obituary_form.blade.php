@@ -2,34 +2,34 @@
 <html>
 <head>
     <title>Submit Obituary</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <style>
-        /* Add your custom CSS here */
-    </style>
-    <script>
-        // Add JavaScript for form validation here
-    </script>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body>
     <div class="container">
         <h1>Submit Obituary</h1>
-        <form method="POST" action="{{ route('obituaries.store') }}">
+        <form method="POST" action="{{ route('obituaries.store') }}" enctype="multipart/form-data">
             @csrf
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            
-            <label for="date_of_birth">Date of Birth:</label>
-            <input type="date" id="date_of_birth" name="date_of_birth" required>
-            
-            <label for="date_of_death">Date of Death:</label>
-            <input type="date" id="date_of_death" name="date_of_death" required>
-            
-            <label for="content">Content:</label>
-            <textarea id="content" name="content" required></textarea>
-            
-            <label for="author">Author:</label>
-            <input type="text" id="author" name="author" required>
-            
+            <div>
+                <label>Name:</label>
+                <input type="text" name="name" required>
+            </div>
+            <div>
+                <label>Date of Birth:</label>
+                <input type="date" name="date_of_birth" required>
+            </div>
+            <div>
+                <label>Date of Death:</label>
+                <input type="date" name="date_of_death" required>
+            </div>
+            <div>
+                <label>Content:</label>
+                <textarea name="content" required></textarea>
+            </div>
+            <div>
+                <label>Author:</label>
+                <input type="text" name="author" required>
+            </div>
             <button type="submit">Submit</button>
         </form>
     </div>

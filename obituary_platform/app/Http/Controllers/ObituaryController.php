@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Obituary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ObituaryController extends Controller
 {
@@ -12,7 +14,7 @@ class ObituaryController extends Controller
     public function index()
     {
 
-    $obituaries = Obituary::paginate(10);
+    $obituaries = Obituary::all();
     return view('obituaries.index', compact('obituaries'));
 
     }
@@ -22,7 +24,7 @@ class ObituaryController extends Controller
      */
     public function create()
     {
-        //
+        return view('obituaries.create');
     }
 
     /**
@@ -30,28 +32,17 @@ class ObituaryController extends Controller
      */
     public function store(Request $request)
     {
-       $validated = $request->validate([
-        'name' => 'required|string|max:100',
-        'date_of_birth' => 'required|date',
-        'date_of_death' => 'required|date',
-        'content' => 'required',
-        'author' => 'required|string|max:100',
-    ]);
+        $obituary = new Obituary();
+        $obituary->name = $request->input('name');
+        $obituary->date_of_birth = $request->input('date_of_birth');
+        $obituary->date_of_death = $request->input('date_of_death');
+        $obituary->content = $request->input('content');
+        $obituary->author = $request->input('author');
+        $obituary->slug = \Str::slug($request->input('name') . '-' . $request->input('date_of_death'));
+        $obituary->save();
 
-    $slug = Str::slug($request->name . '-' . $request->date_of_death, '-');
-
-    Obituary::create([
-        'name' => $validated['name'],
-        'date_of_birth' => $validated['date_of_birth'],
-        'date_of_death' => $validated['date_of_death'],
-        'content' => $validated['content'],
-        'author' => $validated['author'],
-        'slug' => $slug,
-    ]);
-
-    return redirect()->route('obituaries.index')->with('success', 'Obituary submitted successfully.');
-
-
+        return redirect()->route('obituaries.index')->with('success', 'Obituary submitted successfully.');
+   
     }
 
     /**
@@ -59,7 +50,8 @@ class ObituaryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $obituary = Obituary::findOrFail($id);
+        return view('Obituaries.show', compact('Obituary'));
     }
 
     /**
@@ -67,7 +59,8 @@ class ObituaryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $obituary = Obituary::findOrFail($id);
+        return view('obituaries.edit', compact('obituary'));
     }
 
     /**
@@ -75,7 +68,17 @@ class ObituaryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $obituary = Obituary::findOrFail($id);
+        $obituary->name = $request->input('name');
+        $obituary->date_of_birth = $request->input('date_of_birth');
+        $obituary->date_of_death = $request->input('date_of_death');
+        $obituary->content = $request->input('content');
+        $obituary->author = $request->input('author');
+        $obituary->slug = \Str::slug($request->input('name') . '-' . $request->input('date_of_death'));
+        $obituary->save();
+
+        return redirect()->route('obituaries.index')->with('success', 'Obituary updated successfully.');
+
     }
 
     /**
@@ -83,6 +86,10 @@ class ObituaryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $obituary = Obituary::findOrFail($id);
+        $obituary->delete();
+
+        return redirect()->route('obituaries.index')->with('success', 'Obituary deleted successfully.');
+    
     }
 }
