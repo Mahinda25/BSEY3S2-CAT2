@@ -51,7 +51,7 @@ class ObituaryController extends Controller
     public function show(string $id)
     {
         $obituary = Obituary::findOrFail($id);
-        return view('Obituaries.show', compact('Obituary'));
+        return view('obituaries.show', compact('obituary'));
     }
 
     /**
